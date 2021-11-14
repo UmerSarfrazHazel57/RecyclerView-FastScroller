@@ -436,10 +436,7 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
                                 )
                             }
                             updateTextInPopup(
-                                min(
-                                    (recyclerView.adapter?.itemCount ?: 0) - 1,
-                                    position
-                                )
+                                min((recyclerView.adapter?.itemCount ?: 0) - 1, position)
                             )
                         } else {
                             when ((recyclerView.layoutManager as LinearLayoutManager).orientation) {
