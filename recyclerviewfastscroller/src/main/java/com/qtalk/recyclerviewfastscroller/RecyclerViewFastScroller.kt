@@ -76,14 +76,12 @@ import kotlin.math.roundToInt
  * @version 1.0
  * */
 
-class RecyclerViewFastScroller @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : RelativeLayout(context, attrs, defStyleAttr) {
+class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+    RelativeLayout(context, attrs, defStyleAttr) {
 
     companion object {
         private const val TAG: String = "RVFastScroller"
-        private const val ERROR_MESSAGE_NO_RECYCLER_VIEW =
-            "The RecyclerView required for initialization with FastScroller cannot be null"
+        private const val ERROR_MESSAGE_NO_RECYCLER_VIEW = "The RecyclerView required for initialization with FastScroller cannot be null"
     }
 
     enum class FastScrollDirection(val value: Int) {
@@ -230,25 +228,22 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
     private var hideHandleJob: Job? = null
 
     private val trackLength: Float
-        get() =
-            when (fastScrollDirection) {
-                FastScrollDirection.VERTICAL -> trackView.height
-                FastScrollDirection.HORIZONTAL -> trackView.width
-            }.toFloat()
+        get() = when (fastScrollDirection) {
+            FastScrollDirection.VERTICAL -> trackView.height
+            FastScrollDirection.HORIZONTAL -> trackView.width
+        }.toFloat()
 
     private val handleLength: Float
-        get() =
-            when (fastScrollDirection) {
-                FastScrollDirection.HORIZONTAL -> handleImageView.width
-                FastScrollDirection.VERTICAL -> handleImageView.height
-            }.toFloat()
+        get() = when (fastScrollDirection) {
+            FastScrollDirection.HORIZONTAL -> handleImageView.width
+            FastScrollDirection.VERTICAL -> handleImageView.height
+        }.toFloat()
 
     private val popupLength: Float
-        get() =
-            when (fastScrollDirection) {
-                FastScrollDirection.HORIZONTAL -> popupTextView.width
-                FastScrollDirection.VERTICAL -> popupTextView.height
-            }.toFloat()
+        get() = when (fastScrollDirection) {
+            FastScrollDirection.HORIZONTAL -> popupTextView.width
+            FastScrollDirection.VERTICAL -> popupTextView.height
+        }.toFloat()
 
     // property check
     /**
@@ -467,9 +462,7 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
                         }
                         super.onTouchEvent(motionEvent)
                     }
-                    else -> {
-                        false
-                    }
+                    else -> false
                 }
             }
 
@@ -479,23 +472,22 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
     }
 
     private fun alignPopupLayout() {
-        val lpPopupLayout =
-            LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).also {
-                when (popupPosition) {
-                    PopupPosition.BEFORE_TRACK -> {
-                        when (fastScrollDirection) {
-                            FastScrollDirection.HORIZONTAL -> it.addRule(ABOVE, trackView.id)
-                            FastScrollDirection.VERTICAL -> it.addRule(START_OF, trackView.id)
-                        }
+        val lpPopupLayout = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).also {
+            when (popupPosition) {
+                PopupPosition.BEFORE_TRACK -> {
+                    when (fastScrollDirection) {
+                        FastScrollDirection.HORIZONTAL -> it.addRule(ABOVE, trackView.id)
+                        FastScrollDirection.VERTICAL -> it.addRule(START_OF, trackView.id)
                     }
-                    PopupPosition.AFTER_TRACK -> {
-                        when (fastScrollDirection) {
-                            FastScrollDirection.HORIZONTAL -> it.addRule(BELOW, trackView.id)
-                            FastScrollDirection.VERTICAL -> it.addRule(END_OF, trackView.id)
-                        }
+                }
+                PopupPosition.AFTER_TRACK -> {
+                    when (fastScrollDirection) {
+                        FastScrollDirection.HORIZONTAL -> it.addRule(BELOW, trackView.id)
+                        FastScrollDirection.VERTICAL -> it.addRule(END_OF, trackView.id)
                     }
                 }
             }
+        }
         popupTextView.layoutParams = lpPopupLayout
     }
 
@@ -734,18 +726,12 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
                     if (layoutManager.reverseLayout) {
                         min(
                             recyclerViewItemCount,
-                            max(
-                                0,
-                                recyclerViewItemCount - (newOffset * (recyclerViewItemCount - totalVisibleItems)).roundToInt()
-                            )
+                            max(0, recyclerViewItemCount - (newOffset * (recyclerViewItemCount - totalVisibleItems)).roundToInt())
                         )
                     } else {
                         min(
                             recyclerViewItemCount,
-                            max(
-                                0,
-                                (newOffset * (recyclerViewItemCount - totalVisibleItems)).roundToInt()
-                            )
+                            max(0, (newOffset * (recyclerViewItemCount - totalVisibleItems)).roundToInt())
                         )
                     }
 
@@ -829,18 +815,16 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
 
             val (range, extent, offset) =
                 when ((recyclerView.layoutManager as LinearLayoutManager).orientation) {
-                    RecyclerView.HORIZONTAL ->
-                        Triple(
-                            recyclerView.computeHorizontalScrollRange(),
-                            recyclerView.computeHorizontalScrollExtent(),
-                            recyclerView.computeHorizontalScrollOffset()
-                        )
-                    RecyclerView.VERTICAL ->
-                        Triple(
-                            recyclerView.computeVerticalScrollRange(),
-                            recyclerView.computeVerticalScrollExtent(),
-                            recyclerView.computeVerticalScrollOffset()
-                        )
+                    RecyclerView.HORIZONTAL -> Triple(
+                        recyclerView.computeHorizontalScrollRange(),
+                        recyclerView.computeHorizontalScrollExtent(),
+                        recyclerView.computeHorizontalScrollOffset()
+                    )
+                    RecyclerView.VERTICAL -> Triple(
+                        recyclerView.computeVerticalScrollRange(),
+                        recyclerView.computeVerticalScrollExtent(),
+                        recyclerView.computeVerticalScrollOffset()
+                    )
                     else -> error("The orientation of the LinearLayoutManager should be horizontal or vertical")
                 }
 
@@ -922,6 +906,7 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
         if (adapterDataObserver.isInitialized()) {
             recyclerView.adapter?.unregisterAdapterDataObserver(adapterDataObserver.value)
         }
+
         handleImageView.setOnTouchListener(null)
         popupTextView.setOnTouchListener(null)
         recyclerView.removeOnScrollListener(onScrollListener)
