@@ -492,13 +492,13 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
     }
 
     private fun alignTrackAndHandle() {
-        val startPaddingId = if (resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL) {
+        val startPaddingId = if (isRTLLayout()) {
             R.dimen.default_handle_right_padding
         } else {
             R.dimen.default_handle_left_padding
         }
 
-        val endPaddingId = if (resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL) {
+        val endPaddingId = if (isRTLLayout()) {
             R.dimen.default_handle_left_padding
         } else {
             R.dimen.default_handle_right_padding
@@ -542,7 +542,11 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
                 }
                 FastScrollDirection.VERTICAL -> {
                     handleImageView.x = 0F
-                    popupTextView.x = trackView.x - popupTextView.width
+                    popupTextView.x = if (isRTLLayout()) {
+                        trackView.x + popupTextView.width
+                    } else {
+                        trackView.x - popupTextView.width
+                    }
                 }
             }
 
@@ -581,6 +585,8 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
         View.inflate(context, R.layout.fastscroller_popup, this)
         popupTextView = findViewById(R.id.fastscrollPopupTV)
     }
+
+    private fun isRTLLayout() = resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL
 
     /**
      * Sets [isNestedScrollingEnabled] to true to enable support for fast scrolling when swipe
