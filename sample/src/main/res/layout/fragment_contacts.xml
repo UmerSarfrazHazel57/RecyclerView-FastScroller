@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:handleHeight="32dp"
-    app:handleWidth="@dimen/default_handle_size"
+    app:handleWidth="@dimen/default_handle_width"
     app:popupDrawable="@drawable/contacts_fastscroller_drawable"
     app:popupTextStyle="@style/ContactsPopupTextViewStyle">
 

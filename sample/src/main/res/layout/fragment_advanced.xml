@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:handleHeight="32dp"
-        app:handleWidth="@dimen/default_handle_size">
+        app:handleWidth="@dimen/default_handle_width">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/advanced_recycler_view"

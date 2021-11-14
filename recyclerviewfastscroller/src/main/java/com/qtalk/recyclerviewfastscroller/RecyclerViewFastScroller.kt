@@ -116,7 +116,8 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
     private object Defaults {
         val popupDrawableInt: Int = R.drawable.custom_bg_primary
         val handleDrawableInt: Int = R.drawable.custom_bg_primary
-        val handleSize: Int = R.dimen.default_handle_size
+        val handleHeight: Int = R.dimen.default_handle_height
+        val handleWidth: Int = R.dimen.default_handle_width
         val textStyle: Int = R.style.FastScrollerTextAppearance
         val popupPosition: PopupPosition = PopupPosition.BEFORE_TRACK
         val fastScrollDirection: FastScrollDirection = FastScrollDirection.VERTICAL
@@ -125,7 +126,7 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
         const val animationDuration: Long = 100
         const val popupVisibilityDuration = 200L
         const val hasEmptyItemDecorator: Boolean = true
-        const val handleVisibilityDuration: Int = 0
+        const val handleVisibilityDuration: Int = 1000
         const val trackMargin: Int = 0
     }
 
@@ -329,17 +330,19 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
 
             handleHeight = attribs.getDimensionPixelSize(
                 R.styleable.RecyclerViewFastScroller_handleHeight,
-                loadDimenFromResource(Defaults.handleSize)
+                loadDimenFromResource(Defaults.handleHeight)
             )
+
             handleWidth = attribs.getDimensionPixelSize(
                 R.styleable.RecyclerViewFastScroller_handleWidth,
-                loadDimenFromResource(Defaults.handleSize)
+                loadDimenFromResource(Defaults.handleWidth)
             )
 
             trackMarginStart = attribs.getDimensionPixelSize(
                 R.styleable.RecyclerViewFastScroller_trackMarginStart,
                 Defaults.trackMargin
             )
+
             trackMarginEnd = attribs.getDimensionPixelSize(
                 R.styleable.RecyclerViewFastScroller_trackMarginEnd,
                 Defaults.trackMargin
@@ -571,7 +574,7 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
 
     private fun addPopupLayout() {
         View.inflate(context, R.layout.fastscroller_popup, this)
-        popupTextView = findViewById(R.id.fastScrollPopupTV)
+        popupTextView = findViewById(R.id.fastscrollPopupTV)
     }
 
     /**
