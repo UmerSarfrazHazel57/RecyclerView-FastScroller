@@ -21,6 +21,7 @@ import android.animation.Animator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.TypedArray
+import android.graphics.PorterDuff
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
@@ -866,6 +867,12 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
      **/
     fun setHandleStateListener(handleStateListener: HandleStateListener) {
         this.handleStateListener = handleStateListener
+    }
+
+    fun updateColors(primaryColor: Int, textColor: Int) {
+        handleImageView.setColorFilter(primaryColor, PorterDuff.Mode.SRC_IN)
+        popupTextView.setTextColor(textColor)
+        popupTextView.background.mutate().setColorFilter(primaryColor, PorterDuff.Mode.SRC_IN)
     }
 
     /**
