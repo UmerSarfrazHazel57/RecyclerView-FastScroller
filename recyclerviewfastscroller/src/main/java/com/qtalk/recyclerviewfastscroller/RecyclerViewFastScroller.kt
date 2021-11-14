@@ -532,10 +532,11 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
     }
 
     private fun alignTrackAndHandle() {
-        val padding = resources.getDimensionPixelOffset(R.dimen.default_handle_padding)
+        val leftPadding = resources.getDimensionPixelOffset(R.dimen.default_handle_left_padding)
+        val rightPadding = resources.getDimensionPixelOffset(R.dimen.default_handle_right_padding)
         when (fastScrollDirection) {
             FastScrollDirection.HORIZONTAL -> {
-                handleImageView.setPadding(0, padding, 0, padding)
+                handleImageView.setPadding(0, leftPadding, 0, rightPadding)
                 popupTextView.layoutParams = LayoutParams(
                     LayoutParams.WRAP_CONTENT,
                     LayoutParams.WRAP_CONTENT
@@ -546,7 +547,7 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
                 ).also { it.addRule(ALIGN_PARENT_BOTTOM) }
             }
             FastScrollDirection.VERTICAL -> {
-                handleImageView.setPadding(padding, 0, padding, 0)
+                handleImageView.setPadding(leftPadding, 0, rightPadding, 0)
                 popupTextView.layoutParams = LayoutParams(
                     LayoutParams.WRAP_CONTENT,
                     LayoutParams.WRAP_CONTENT
