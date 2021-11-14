@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-// https://github.com/chrisbanes/gradle-mvn-push/issues/65
+apply plugin: 'maven-publish'
 
 android {
     compileSdkVersion versions.'compileSdk'
@@ -53,4 +53,15 @@ repositories {
 
 tasks.withType(Javadoc).all {
     enabled = false // <--- https://github.com/novoda/bintray-release/issues/71
+}
+
+
+project.afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+            }
+        }
+    }
 }
