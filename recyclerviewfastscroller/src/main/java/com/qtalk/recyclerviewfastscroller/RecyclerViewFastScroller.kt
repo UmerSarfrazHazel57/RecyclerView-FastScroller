@@ -500,8 +500,20 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
     }
 
     private fun alignTrackAndHandle() {
-        val leftPadding = resources.getDimensionPixelOffset(R.dimen.default_handle_left_padding)
-        val rightPadding = resources.getDimensionPixelOffset(R.dimen.default_handle_right_padding)
+        val startPaddingId = if (resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL) {
+            R.dimen.default_handle_right_padding
+        } else {
+            R.dimen.default_handle_left_padding
+        }
+
+        val endPaddingId = if (resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL) {
+            R.dimen.default_handle_left_padding
+        } else {
+            R.dimen.default_handle_right_padding
+        }
+
+        val leftPadding = resources.getDimensionPixelOffset(startPaddingId)
+        val rightPadding = resources.getDimensionPixelOffset(endPaddingId)
         when (fastScrollDirection) {
             FastScrollDirection.HORIZONTAL -> {
                 handleImageView.setPadding(0, leftPadding, 0, rightPadding)
