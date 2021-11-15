@@ -649,7 +649,6 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
      * @param makeVisible
      * */
     private fun View.animateVisibility(makeVisible: Boolean = true) {
-
         val scaleFactor: Float = if (makeVisible) 1f else 0f
         this.animate().scaleX(scaleFactor).setDuration(Defaults.animationDuration)
             .onAnimationCancelled {
@@ -814,28 +813,31 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
     private val onScrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
-            if (isEngaged && isFastScrollEnabled) return
+            if (isEngaged && isFastScrollEnabled) {
+                return
+            }
 
-            val (range, extent, offset) =
-                when ((recyclerView.layoutManager as LinearLayoutManager).orientation) {
-                    RecyclerView.HORIZONTAL -> Triple(
-                        recyclerView.computeHorizontalScrollRange(),
-                        recyclerView.computeHorizontalScrollExtent(),
-                        recyclerView.computeHorizontalScrollOffset()
-                    )
-                    RecyclerView.VERTICAL -> Triple(
-                        recyclerView.computeVerticalScrollRange(),
-                        recyclerView.computeVerticalScrollExtent(),
-                        recyclerView.computeVerticalScrollOffset()
-                    )
-                    else -> error("The orientation of the LinearLayoutManager should be horizontal or vertical")
-                }
+            val (range, extent, offset) = when ((recyclerView.layoutManager as LinearLayoutManager).orientation) {
+                RecyclerView.HORIZONTAL -> Triple(
+                    recyclerView.computeHorizontalScrollRange(),
+                    recyclerView.computeHorizontalScrollExtent(),
+                    recyclerView.computeHorizontalScrollOffset()
+                )
+                RecyclerView.VERTICAL -> Triple(
+                    recyclerView.computeVerticalScrollRange(),
+                    recyclerView.computeVerticalScrollExtent(),
+                    recyclerView.computeVerticalScrollOffset()
+                )
+                else -> error("The orientation of the LinearLayoutManager should be horizontal or vertical")
+            }
 
             // check if the layout is scrollable. i.e. range is large than extent, else disable fast scrolling and track touches.
             if (extent < range) {
-                handleImageView.animateVisibility()
-                handleImageView.isEnabled = true
-                trackView.isEnabled = true
+                if (dy != 0) {
+                    handleImageView.animateVisibility()
+                    handleImageView.isEnabled = true
+                    trackView.isEnabled = true
+                }
             } else {
                 handleImageView.animateVisibility(false)
                 trackView.isEnabled = false

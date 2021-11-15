@@ -20,5 +20,4 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     </com.qtalk.recyclerviewfastscroller.RecyclerViewFastScroller>
-
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
