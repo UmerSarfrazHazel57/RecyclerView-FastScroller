@@ -817,7 +817,8 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
                 return
             }
 
-            val (range, extent, offset) = when ((recyclerView.layoutManager as LinearLayoutManager).orientation) {
+            val orientation = (recyclerView.layoutManager as LinearLayoutManager).orientation
+            val (range, extent, offset) = when (orientation) {
                 RecyclerView.HORIZONTAL -> Triple(
                     recyclerView.computeHorizontalScrollRange(),
                     recyclerView.computeHorizontalScrollExtent(),
@@ -833,22 +834,26 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
 
             // check if the layout is scrollable. i.e. range is large than extent, else disable fast scrolling and track touches.
             if (extent < range) {
-                if (dy != 0) {
+                if (dy != 0 && orientation == RecyclerView.VERTICAL) {
                     handleImageView.animateVisibility()
                     handleImageView.isEnabled = true
                     trackView.isEnabled = true
                 }
             } else {
-                handleImageView.animateVisibility(false)
-                trackView.isEnabled = false
-                handleImageView.isEnabled = false
+                if (dx != 0 && orientation == RecyclerView.HORIZONTAL) {
+                    handleImageView.animateVisibility(false)
+                    trackView.isEnabled = false
+                    handleImageView.isEnabled = false
+                }
                 return
             }
 
             val error = extent.toFloat() * offset / range
             val finalOffset: Float = (trackLength - handleLength) * ((error + offset) / range)
 
-            moveHandle(finalOffset)
+            if ((dy != 0 && orientation == RecyclerView.VERTICAL) || (dx != 0 && orientation == RecyclerView.HORIZONTAL)) {
+                moveHandle(finalOffset)
+            }
         }
     }
 
