@@ -179,6 +179,7 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
      * The [TextView] which is used to display the popup text.
      **/
     lateinit var popupTextView: TextView
+    private var currentPopupItemPosition = -1
 
     var trackMarginStart: Int = 0
         set(value) {
@@ -757,10 +758,11 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
      * Update popup text or hide popup when the interface is not implemented
      * */
     private fun updateTextInPopup(position: Int) {
-        if (position !in 0 until (recyclerView.adapter?.itemCount ?: 1)) {
+        if (position == currentPopupItemPosition || position !in 0 until (recyclerView.adapter?.itemCount ?: 1)) {
             return
         }
 
+        currentPopupItemPosition = position
         when (val adapter = recyclerView.adapter) {
             null -> throw IllegalAccessException("No adapter found, if you have an adapter then try placing if before calling the attachFastScrollerToRecyclerView() method")
             is OnPopupTextUpdate -> popupTextView.text = adapter.onChange(position).toString()
@@ -801,11 +803,13 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
             override fun onChanged() {
                 super.onChanged()
                 previousTotalVisibleItem = 0
+                currentPopupItemPosition = -1
             }
 
             override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
                 super.onItemRangeRemoved(positionStart, itemCount)
                 previousTotalVisibleItem = 0
+                currentPopupItemPosition = -1
             }
         }
     }
