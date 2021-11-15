@@ -649,15 +649,19 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
      * @param makeVisible
      * */
     private fun View.animateVisibility(makeVisible: Boolean = true) {
-        val scaleFactor: Float = if (makeVisible) 1f else 0f
-        this.animate().scaleX(scaleFactor).setDuration(Defaults.animationDuration)
-            .onAnimationCancelled {
-                this.animate().scaleX(scaleFactor).duration = Defaults.animationDuration
-            }
-        this.animate().scaleY(scaleFactor).setDuration(Defaults.animationDuration)
-            .onAnimationCancelled {
-                this.animate().scaleY(scaleFactor).duration = Defaults.animationDuration
-            }
+        if (makeVisible) {
+            scaleX = 1f
+            scaleY = 1f
+        } else {
+            animate().scaleX(0f).setDuration(Defaults.animationDuration)
+                .onAnimationCancelled {
+                    animate().scaleX(0f).duration = Defaults.animationDuration
+                }
+            animate().scaleY(0f).setDuration(Defaults.animationDuration)
+                .onAnimationCancelled {
+                    animate().scaleY(0f).duration = Defaults.animationDuration
+                }
+        }
     }
 
     // set of load methods for handy loading from attribs
