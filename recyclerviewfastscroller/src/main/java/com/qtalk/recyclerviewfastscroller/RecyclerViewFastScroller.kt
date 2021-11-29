@@ -892,6 +892,20 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
         popupTextView.background.mutate().setColorFilter(primaryColor, PorterDuff.Mode.SRC_IN)
     }
 
+    fun setScrollVertically(scrollVertically: Boolean) {
+        if (scrollVertically && fastScrollDirection == FastScrollDirection.HORIZONTAL) {
+            fastScrollDirection = FastScrollDirection.VERTICAL
+            val tmp = handleWidth
+            handleWidth = handleHeight
+            handleHeight = tmp
+        } else if (!scrollVertically && fastScrollDirection == FastScrollDirection.VERTICAL) {
+            fastScrollDirection = FastScrollDirection.HORIZONTAL
+            val tmp = handleWidth
+            handleWidth = handleHeight
+            handleHeight = tmp
+        }
+    }
+
     /**
      * ### Call this method only if [RecyclerView] is not a child to this view, else can cause memory leaks and undesired behavior
      *
