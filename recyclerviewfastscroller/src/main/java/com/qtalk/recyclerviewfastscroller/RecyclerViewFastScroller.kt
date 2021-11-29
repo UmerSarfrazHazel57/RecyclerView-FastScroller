@@ -21,6 +21,7 @@ import android.animation.Animator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.TypedArray
+import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
@@ -82,6 +83,7 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
     companion object {
         private const val TAG: String = "RVFastScroller"
         private const val ERROR_MESSAGE_NO_RECYCLER_VIEW = "The RecyclerView required for initialization with FastScroller cannot be null"
+        private const val DARK_GREY = 0xFF333333.toInt()
     }
 
     enum class FastScrollDirection(val value: Int) {
@@ -884,9 +886,9 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
         this.handleStateListener = handleStateListener
     }
 
-    fun updateColors(primaryColor: Int, textColor: Int) {
+    fun updateColors(primaryColor: Int) {
         handleImageView.setColorFilter(primaryColor, PorterDuff.Mode.SRC_IN)
-        popupTextView.setTextColor(textColor)
+        popupTextView.setTextColor(getContrastColor(primaryColor))
         popupTextView.background.mutate().setColorFilter(primaryColor, PorterDuff.Mode.SRC_IN)
     }
 
@@ -1000,5 +1002,10 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
         if (BuildConfig.DEBUG) {
             Log.d(TAG, message)
         }
+    }
+
+    fun getContrastColor(color: Int): Int {
+        val y = (299 * Color.red(color) + 587 * Color.green(color) + 114 * Color.blue(color)) / 1000
+        return if (y >= 149 && color != Color.BLACK) DARK_GREY else Color.WHITE
     }
 }
