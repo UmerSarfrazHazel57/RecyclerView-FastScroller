@@ -925,7 +925,10 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
     fun detachFastScrollerFromRecyclerView() {
         // unregister the observer to prevent memory leaks only if initialized
         if (adapterDataObserver.isInitialized()) {
-            recyclerView.adapter?.unregisterAdapterDataObserver(adapterDataObserver.value)
+            try {
+                recyclerView.adapter?.unregisterAdapterDataObserver(adapterDataObserver.value)
+            } catch (ignored: Exception) {
+            }
         }
 
         handleImageView.setOnTouchListener(null)
