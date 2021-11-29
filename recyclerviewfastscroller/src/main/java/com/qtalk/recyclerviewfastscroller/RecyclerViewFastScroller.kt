@@ -23,7 +23,6 @@ import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.Color
 import android.graphics.PorterDuff
-import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.Log
@@ -126,7 +125,6 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
         const val isFastScrollEnabled: Boolean = true
         const val animationDuration: Long = 100
         const val popupVisibilityDuration = 200L
-        const val hasEmptyItemDecorator: Boolean = true
         const val handleVisibilityDuration: Int = 1000
         const val trackMargin: Int = 0
     }
@@ -220,7 +218,6 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
 
     // --- internal properties
     private var popupPosition: PopupPosition = Defaults.popupPosition
-    private var hasEmptyItemDecorator: Boolean = Defaults.hasEmptyItemDecorator
     private lateinit var handleImageView: AppCompatImageView
     private lateinit var trackView: LinearLayout
     private lateinit var recyclerView: RecyclerView
@@ -294,11 +291,6 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
             isFastScrollEnabled = attribs.getBoolean(
                 R.styleable.RecyclerViewFastScroller_fastScrollEnabled,
                 Defaults.isFastScrollEnabled
-            )
-
-            hasEmptyItemDecorator = attribs.getBoolean(
-                R.styleable.RecyclerViewFastScroller_addLastItemPadding,
-                Defaults.hasEmptyItemDecorator
             )
 
             trackView.background = attribs.getDrawable(R.styleable.RecyclerViewFastScroller_trackDrawable)
@@ -773,33 +765,6 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
         }
     }
 
-    private val emptySpaceItemDecoration by lazy {
-        object : RecyclerView.ItemDecoration() {
-
-            override fun getItemOffsets(
-                outRect: Rect,
-                view: View,
-                parent: RecyclerView,
-                state: RecyclerView.State
-            ) {
-                super.getItemOffsets(outRect, view, parent, state)
-                if (parent.getChildAdapterPosition(view) == parent.adapter?.itemCount ?: 0 - 1) {
-                    val currentVisiblePos: Int = (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-                    if (currentVisiblePos != RecyclerView.NO_POSITION) {
-                        outRect.bottom = (parent.findViewHolderForAdapterPosition(currentVisiblePos)?.itemView?.height ?: 0)
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * adds empty space to the last item of the [RecyclerView]
-     **/
-    private fun setEmptySpaceItemDecorator() {
-        recyclerView.addItemDecoration(emptySpaceItemDecoration)
-    }
-
     private val adapterDataObserver = lazy {
         object : RecyclerView.AdapterDataObserver() {
             override fun onChanged() {
@@ -869,9 +834,6 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
     }
 
     private fun initImpl() {
-        if (hasEmptyItemDecorator) {
-            setEmptySpaceItemDecorator()
-        }
         registerDataObserver()
         recyclerView.addOnScrollListener(onScrollListener)
     }
@@ -948,9 +910,6 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
         handleImageView.setOnTouchListener(null)
         popupTextView.setOnTouchListener(null)
         recyclerView.removeOnScrollListener(onScrollListener)
-        if (hasEmptyItemDecorator) {
-            recyclerView.removeItemDecoration(emptySpaceItemDecoration)
-        }
     }
 
     @Keep
