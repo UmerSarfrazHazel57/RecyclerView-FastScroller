@@ -885,6 +885,12 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
         }
     }
 
+    fun resetManualScrolling() {
+        calculateScrollPositionManually = false
+        fullContentHeight = 0
+        scrollOffset = 0
+    }
+
     /**
      * ### Call this method only if [RecyclerView] is not a child to this view, else can cause memory leaks and undesired behavior
      *
