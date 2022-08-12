@@ -47,3 +47,13 @@ repositories {
 tasks.withType(Javadoc).all {
     enabled = false // <--- https://github.com/novoda/bintray-release/issues/71
 }
+
+project.afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+            }
+        }
+    }
+}
