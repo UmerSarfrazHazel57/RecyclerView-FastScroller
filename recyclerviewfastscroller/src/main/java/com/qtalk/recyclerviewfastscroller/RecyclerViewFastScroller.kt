@@ -245,6 +245,12 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
             FastScrollDirection.VERTICAL -> popupTextView.height
         }.toFloat()
 
+    // computeHorizontalScrollRange and computeHorizontalScrollOffset are unreliable with GridLayoutManager and spanCount > 1, so calculate height and offset
+    // manually if required. Can be used only in cases when every item has the same height
+    var calculateScrollPositionManually = false
+    var fullContentHeight = 0
+    private var scrollOffset = 0
+
     // property check
     /**
      * Checks if the [FastScrollDirection] is [FastScrollDirection.VERTICAL] or not
@@ -792,6 +798,7 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
                 return
             }
 
+            scrollOffset += dy
             val orientation = (recyclerView.layoutManager as LinearLayoutManager).orientation
             val (range, extent, offset) = when (orientation) {
                 RecyclerView.HORIZONTAL -> Triple(
@@ -799,11 +806,21 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
                     recyclerView.computeHorizontalScrollExtent(),
                     recyclerView.computeHorizontalScrollOffset()
                 )
-                RecyclerView.VERTICAL -> Triple(
-                    recyclerView.computeVerticalScrollRange(),
-                    recyclerView.computeVerticalScrollExtent(),
-                    recyclerView.computeVerticalScrollOffset()
-                )
+                RecyclerView.VERTICAL -> {
+                    if (calculateScrollPositionManually) {
+                        Triple(
+                            fullContentHeight,
+                            recyclerView.computeVerticalScrollExtent(),
+                            scrollOffset
+                        )
+                    } else {
+                        Triple(
+                            recyclerView.computeVerticalScrollRange(),
+                            recyclerView.computeVerticalScrollExtent(),
+                            recyclerView.computeVerticalScrollOffset()
+                        )
+                    }
+                }
                 else -> error("The orientation of the LinearLayoutManager should be horizontal or vertical")
             }
 
