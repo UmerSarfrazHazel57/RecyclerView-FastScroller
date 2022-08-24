@@ -465,7 +465,9 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
             }
 
             // set the same touch listeners to both handle and track as they have the same functionality
-            handleImageView.setOnTouchListener(touchListener)
+            if (isFastScrollEnabled) {
+                handleImageView.setOnTouchListener(touchListener)
+            }
         }
     }
 
