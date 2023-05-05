@@ -40,8 +40,11 @@ import androidx.annotation.StyleableRes
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import androidx.core.widget.TextViewCompat
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import kotlinx.coroutines.*
 import kotlin.math.max
 import kotlin.math.min
@@ -440,10 +443,30 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
                                 min((recyclerView.adapter?.itemCount ?: 0) - 1, position)
                             )
                         } else {
-                            when ((recyclerView.layoutManager as LinearLayoutManager).orientation) {
-                                RecyclerView.HORIZONTAL -> recyclerView.scrollBy(currentRelativePos.toInt(), 0)
-                                RecyclerView.VERTICAL -> recyclerView.scrollBy(0, currentRelativePos.toInt())
+                            when (val lm = recyclerView.layoutManager) {
+                                is LinearLayoutManager -> {
+                                    when (lm.orientation) {
+                                        RecyclerView.HORIZONTAL -> recyclerView.scrollBy(currentRelativePos.toInt(), 0)
+                                        RecyclerView.VERTICAL -> recyclerView.scrollBy(0, currentRelativePos.toInt())
+                                    }
+                                }
+
+                                is GridLayoutManager -> {
+                                    when (lm.orientation) {
+                                        RecyclerView.HORIZONTAL -> recyclerView.scrollBy(currentRelativePos.toInt(), 0)
+                                        RecyclerView.VERTICAL -> recyclerView.scrollBy(0, currentRelativePos.toInt())
+                                    }
+                                }
+
+                                is StaggeredGridLayoutManager -> {
+                                    when (lm.orientation) {
+                                        RecyclerView.HORIZONTAL -> recyclerView.scrollBy(currentRelativePos.toInt(), 0)
+                                        RecyclerView.VERTICAL -> recyclerView.scrollBy(0, currentRelativePos.toInt())
+                                    }
+                                }
+
                             }
+
                         }
 
                         true
