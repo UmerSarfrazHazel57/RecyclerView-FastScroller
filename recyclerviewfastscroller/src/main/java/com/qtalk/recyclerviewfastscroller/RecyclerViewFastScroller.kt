@@ -43,7 +43,6 @@ import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import kotlinx.coroutines.*
 import kotlin.math.max
@@ -715,6 +714,8 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
         }
     }
 
+
+
     /**
      * [RecyclerView.LayoutManager] has different types of scroll mechanisms, this extension function uses the [LinearLayoutManager.scrollToPositionWithOffset] if its an instance of [LinearLayoutManager]
      * else uses the standard [RecyclerView.LayoutManager.scrollToPosition] method. The offset in [LinearLayoutManager] is the position where the view should be after scrolling relative to the [RecyclerView]
@@ -723,6 +724,8 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
         with(this.layoutManager) {
             when (this) {
                 is LinearLayoutManager -> scrollToPositionWithOffset(position, 0)
+                is StaggeredGridLayoutManager -> scrollToPositionWithOffset(position,0)
+                is GridLayoutManager -> scrollToPositionWithOffset(position,0)
                 is RecyclerView.LayoutManager -> scrollToPosition(position)
             }
         }
@@ -824,7 +827,7 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
             }
 
             scrollOffset += dy
-            val orientation = (recyclerView.layoutManager as LinearLayoutManager).orientation
+            val orientation = getOrientation()
             val (range, extent, offset) = when (orientation) {
                 RecyclerView.HORIZONTAL -> Triple(
                     recyclerView.computeHorizontalScrollRange(),
@@ -879,6 +882,26 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
         registerDataObserver()
         recyclerView.addOnScrollListener(onScrollListener)
     }
+
+    fun getOrientation(): Int{
+        when (val lm = recyclerView.layoutManager) {
+            is LinearLayoutManager -> {
+              return  lm.orientation
+            }
+
+            is GridLayoutManager -> {
+              return  lm.orientation
+            }
+
+            is StaggeredGridLayoutManager -> {
+                return  lm.orientation
+            }
+
+        }
+
+        return RecyclerView.HORIZONTAL
+    }
+
 
     /**
      * Sets a [HandleStateListener] to this fast scroll
