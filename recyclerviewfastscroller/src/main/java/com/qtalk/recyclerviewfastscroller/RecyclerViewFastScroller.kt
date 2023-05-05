@@ -131,6 +131,8 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
         const val trackMargin: Int = 0
     }
 
+    private var touchListener: View.OnTouchListener?= null
+
     /**
      * Sets a track background drawable to the track used, default is `null`
      * */
@@ -365,6 +367,10 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
         super.onDetachedFromWindow()
     }
 
+    fun reAttachHandleListener(){
+        this.handleImageView.setOnTouchListener(touchListener)
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onFinishInflate() {
         super.onFinishInflate()
@@ -380,7 +386,7 @@ class RecyclerViewFastScroller @JvmOverloads constructor(context: Context, attrs
             }
         }
         post {
-            val touchListener = OnTouchListener { _, motionEvent ->
+             touchListener = OnTouchListener { _, motionEvent ->
                 val locationArray = IntArray(2)
 
                 // getting the position of this view on the screen, getting absolute X and Y coordinates
